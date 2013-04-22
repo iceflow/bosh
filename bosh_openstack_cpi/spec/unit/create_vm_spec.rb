@@ -34,6 +34,7 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
       :security_groups => security_groups,
       :nics => nics,
       :user_data => Yajl::Encoder.encode(user_data),
+      :personality => [ { :path => "/var/vcap/bosh/user_data.json", :contents => Yajl::Encoder.encode(user_data)} ],
       :availability_zone => "foobar-1a"
     }
   end
@@ -50,11 +51,16 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
       },
       "server" => {
         "name" => "vm-#{unique_name}"
+      },
+      "openssh" => {
+        "public_key" => "public openssh key"
       }
     }
     server = double("server", :id => "i-test", :name => "i-test")
     image = double("image", :id => "sc-id", :name => "sc-id")
     flavor = double("flavor", :id => "f-test", :name => "m1.tiny")
+    key_pair = double("key_pair", :id => "k-test", :name => "test_key",
+                      :fingerprint => "00:01:02:03:04", :public_key => "public openssh key")
     address = double("address", :id => "a-test", :ip => "10.0.0.1",
                      :instance_id => "i-test")
 
@@ -64,6 +70,7 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
           and_return(server)
       openstack.images.should_receive(:find).and_return(image)
       openstack.flavors.should_receive(:find).and_return(flavor)
+      openstack.key_pairs.should_receive(:find).and_return(key_pair)
       openstack.addresses.should_receive(:each).and_yield(address)
     end
 
@@ -91,6 +98,9 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
         "server" => {
           "name" => "vm-#{unique_name}"
         },
+        "openssh" => {
+          "public_key" => "public openssh key"
+        },
         "dns" => {
           "nameserver" => ["1.2.3.4"]
         }
@@ -100,6 +110,8 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
     server = double("server", :id => "i-test", :name => "i-test")
     image = double("image", :id => "sc-id", :name => "sc-id")
     flavor = double("flavor", :id => "f-test", :name => "m1.tiny")
+    key_pair = double("key_pair", :id => "k-test", :name => "test_key",
+                      :fingerprint => "00:01:02:03:04", :public_key => "public openssh key")
     address = double("address", :id => "a-test", :ip => "10.0.0.1",
                      :instance_id => "i-test")
 
@@ -109,6 +121,7 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
           and_return(server)
       openstack.images.should_receive(:find).and_return(image)
       openstack.flavors.should_receive(:find).and_return(flavor)
+      openstack.key_pairs.should_receive(:find).and_return(key_pair)
       openstack.addresses.should_receive(:each).and_yield(address)
     end
 
@@ -134,6 +147,9 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
       },
       "server" => {
         "name" => "vm-#{unique_name}"
+      },
+      "openssh" => {
+        "public_key" => "public openssh key"
       }
     }
     security_groups = %w[bar foo]
@@ -143,6 +159,8 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
     server = double("server", :id => "i-test", :name => "i-test")
     image = double("image", :id => "sc-id", :name => "sc-id")
     flavor = double("flavor", :id => "f-test", :name => "m1.tiny")
+    key_pair = double("key_pair", :id => "k-test", :name => "test_key",
+                      :fingerprint => "00:01:02:03:04", :public_key => "public openssh key")
     address = double("address", :id => "a-test", :ip => "10.0.0.1",
                      :instance_id => nil)
 
@@ -152,6 +170,7 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
           and_return(server)
       openstack.images.should_receive(:find).and_return(image)
       openstack.flavors.should_receive(:find).and_return(flavor)
+      openstack.key_pairs.should_receive(:find).and_return(key_pair)
       openstack.addresses.should_receive(:each).and_yield(address)
     end
 
@@ -176,11 +195,16 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
       },
       "server" => {
         "name" => "vm-#{unique_name}"
+      },
+      "openssh" => {
+        "public_key" => "public openssh key"
       }
     }
     server = double("server", :id => "i-test", :name => "i-test")
     image = double("image", :id => "sc-id", :name => "sc-id")
     flavor = double("flavor", :id => "f-test", :name => "m1.tiny")
+    key_pair = double("key_pair", :id => "k-test", :name => "test_key",
+                      :fingerprint => "00:01:02:03:04", :public_key => "public openssh key")
     address = double("address", :id => "a-test", :ip => "10.0.0.1",
                      :instance_id => nil)
     nic = { "net_id" => "foo" }
@@ -194,6 +218,7 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
           and_return(server)
       openstack.images.should_receive(:find).and_return(image)
       openstack.flavors.should_receive(:find).and_return(flavor)
+      openstack.key_pairs.should_receive(:find).and_return(key_pair)
       openstack.addresses.should_receive(:each).and_yield(address)
     end
 
@@ -218,11 +243,16 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
       },
       "server" => {
         "name" => "vm-#{unique_name}"
+      },
+      "openssh" => {
+        "public_key" => "public openssh key"
       }
     }
     server = double("server", :id => "i-test", :name => "i-test")
     image = double("image", :id => "sc-id", :name => "sc-id")
     flavor = double("flavor", :id => "f-test", :name => "m1.tiny")
+    key_pair = double("key_pair", :id => "k-test", :name => "test_key",
+                      :fingerprint => "00:01:02:03:04", :public_key => "public openssh key")
     address = double("address", :id => "a-test", :ip => "10.0.0.1",
                      :instance_id => nil)
     nic = { "net_id" => "foo", "v4_fixed_ip" => "10.0.0.5" }
@@ -237,6 +267,7 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
           and_return(server)
       openstack.images.should_receive(:find).and_return(image)
       openstack.flavors.should_receive(:find).and_return(flavor)
+      openstack.key_pairs.should_receive(:find).and_return(key_pair)
       openstack.addresses.should_receive(:each).and_yield(address)
     end
 
@@ -257,6 +288,8 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
     server = double("server", :id => "i-test", :name => "i-test")
     image = double("image", :id => "sc-id", :name => "sc-id")
     flavor = double("flavor", :id => "f-test", :name => "m1.tiny")
+    key_pair = double("key_pair", :id => "k-test", :name => "test_key",
+                      :fingerprint => "00:01:02:03:04", :public_key => "public openssh key")
     address = double("address", :id => "a-test", :ip => "10.0.0.1",
                      :instance_id => "i-test")
 
@@ -264,6 +297,7 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
       openstack.servers.should_receive(:create).and_return(server)
       openstack.images.should_receive(:find).and_return(image)
       openstack.flavors.should_receive(:find).and_return(flavor)
+      openstack.key_pairs.should_receive(:find).and_return(key_pair)
       openstack.addresses.should_receive(:find).and_return(address)
     end
 
@@ -282,11 +316,14 @@ describe Bosh::OpenStackCloud::Cloud, "create_vm" do
     server = double("server", :id => "i-test", :name => "i-test")
     image = double("image", :id => "sc-id", :name => "sc-id")
     flavor = double("flavor", :id => "f-test", :name => "m1.tiny")
+    key_pair = double("key_pair", :id => "k-test", :name => "test_key",
+                      :fingerprint => "00:01:02:03:04", :public_key => "public openssh key")
 
     cloud = mock_cloud do |openstack|
       openstack.servers.should_receive(:create).and_return(server)
       openstack.images.should_receive(:find).and_return(image)
       openstack.flavors.should_receive(:find).and_return(flavor)
+      openstack.key_pairs.should_receive(:find).and_return(key_pair)
     end
 
     cloud.should_receive(:wait_resource).with(server, :active, :state).and_raise(Bosh::Clouds::CloudError)
